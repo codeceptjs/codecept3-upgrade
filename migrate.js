@@ -1,73 +1,73 @@
 const j = require('jscodeshift');
+const replacer = require('./replacer');
 
 module.exports = (fileInfo) => {
-  let newSource = j(fileInfo.source).find(j.ExpressionStatement, {
+  const newSource = j(fileInfo.source);
+  // Scenario
+  replacer(newSource.find(j.ExpressionStatement, {
     expression: {
       callee: {
         name: 'Scenario',
       },
     },
-  });
-
-  if (newSource.paths().length > 0) {
-    newSource = j(fileInfo.source).find(j.ExpressionStatement, {
-      expression: {
-        callee: {
+  }));
+  // xScenario
+  replacer(newSource.find(j.ExpressionStatement, {
+    expression: {
+      callee: {
+        name: 'xScenario',
+      },
+    },
+  }));
+  // Data().Scenario
+  replacer(newSource.find(j.ExpressionStatement, {
+    expression: {
+      callee: {
+        property: {
           name: 'Scenario',
         },
       },
-    })
-      .find(j.ArrowFunctionExpression)
-      // eslint-disable-next-line array-callback-return
-      .filter(p => {
-        const root = p.value;
-        for (const param of root.params) {
-          if (param.type === 'ObjectPattern') {
-            // console.log(param);
-          }
-          return param.type !== 'ObjectPattern';
-        }
-      })
-      .replaceWith(p => {
-        const root = p.value;
-        const firstParam = root.params[0];
-        const lastParam = root.params[root.params.length - 1];
-  
-        firstParam.name = `{ ${firstParam.name}`;
-        lastParam.name = `${lastParam.name} }`;
-        return root;
-      });
-  } else {
-    newSource = j(fileInfo.source).find(j.ExpressionStatement, {
-      expression: {
-        callee: {
-          property: {
-            name: 'Scenario',
-          },
+    },
+  }));
+  // Scenario.only
+  replacer(newSource.find(j.ExpressionStatement, {
+    expression: {
+      callee: {
+        object: {
+          name: 'Scenario',
+        },
+        property: {
+          name: 'only',
         },
       },
-    })
-      .find(j.ArrowFunctionExpression)
-    // eslint-disable-next-line array-callback-return
-      .filter(p => {
-        const root = p.value;
-        for (const param of root.params) {
-          if (param.type === 'ObjectPattern') {
-            // console.log(param);
-          }
-          return param.type !== 'ObjectPattern';
-        }
-      })
-      .replaceWith(p => {
-        const root = p.value;
-        const firstParam = root.params[0];
-        const lastParam = root.params[root.params.length - 1];
-
-        firstParam.name = `{ ${firstParam.name}`;
-        lastParam.name = `${lastParam.name} }`;
-        return root;
-      });
-  }
+    },
+  }));
+  // Scenario.skip
+  replacer(newSource.find(j.ExpressionStatement, {
+    expression: {
+      callee: {
+        object: {
+          name: 'Scenario',
+        },
+        property: {
+          name: 'skip',
+        },
+      },
+    },
+  }));
+  // Scenario.todo
+  replacer(newSource.find(j.ExpressionStatement, {
+    expression: {
+      callee: {
+        object: {
+          name: 'Scenario',
+        },
+        property: {
+          name: 'todo',
+        },
+      },
+    },
+  }));
 
   return newSource.toSource();
 };
