@@ -1,15 +1,18 @@
 {
   "name": "codecept3-upgrade",
-  "version": "0.0.1",
+  "version": "0.4.0",
   "repository": "https://github.com/codecept-js/codecept3-upgrade.git",
   "license": "MIT",
   "author": "Vorobeyko <sashavorobey95@gmail.com>",
   "main": "index.js",
   "bin": {
-    "migrate": "./index.js"
+    "codeceptjs-migrate": "./bin/codeceptjs-migrate.js"
   },
   "files": [
-    "migrate.js"
+    "bin/codeceptjs-migrate.js",
+    "bin/args.js",
+    "migrate.js",
+    "replacer.js"
   ],
   "scripts": {
     "lint": "eslint __tests__/ migrate.js",
@@ -18,11 +21,18 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn lint"
+      "pre-commit": "yarn lint",
+      "pre-push": "yarn test"
     }
   },
+  "jest": {
+    "testMatch": [
+      "**/__tests__/**/*test.js"
+    ]
+  },
   "dependencies": {
-    "jscodeshift": "^0.7.0"
+    "jscodeshift": "^0.7.0",
+    "yargs": "^15.1.0"
   },
   "devDependencies": {
     "@types/jest": "^25.1.3",

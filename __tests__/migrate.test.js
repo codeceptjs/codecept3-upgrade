@@ -184,9 +184,9 @@ describe('#transform JavaScript', () => {
     Feature('PageObject');
   
     Data(accounts).Scenario('@ClassPageObject', (I, classpage, current) => {
-    classpage.type('Class Page Type');
-    classpage.purgeDomains();
-  });
+      classpage.type('Class Page Type');
+      classpage.purgeDomains();
+    });
     `;
     expect(transform({ source })).toContain('Scenario(\'@ClassPageObject\', ({ I, classpage, current })');
   });
@@ -258,9 +258,9 @@ describe('#transform JavaScript', () => {
     Feature('PageObject');
   
     Data(accounts).Scenario('@ClassPageObject', { retries: 2 } , (I, classpage, current) => {
-    classpage.type('Class Page Type');
-    classpage.purgeDomains();
-  });
+      classpage.type('Class Page Type');
+      classpage.purgeDomains();
+    });
     `;
     expect(transform({ source })).toContain('Scenario(\'@ClassPageObject\', { retries: 2 } , ({ I, classpage, current })');
   });
