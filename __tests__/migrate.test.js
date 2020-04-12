@@ -13,6 +13,18 @@ describe('#transform JavaScript', () => {
     expect(transform({ source })).toContain('Scenario(\'@ClassPageObject\', ({ I })');
   });
 
+  it("Scenario('title', function (I) {})", () => {
+    const source = `
+    Feature('PageObject');
+  
+  Scenario('@ClassPageObject', function (I) {
+    classpage.type('Class Page Type');
+    classpage.purgeDomains();
+  });
+    `;
+    expect(transform({ source })).toContain('Scenario(\'@ClassPageObject\', function ({ I })');
+  });
+
   it("Double Scenario('title', (I) => {})", () => {
     const source = `
     Feature('PageObject');
@@ -266,7 +278,7 @@ describe('#transform JavaScript', () => {
   });
 });
 
-describe.skip('#transform TypeScript', () => {
+describe('#transform TypeScript', () => {
   it("Scenario('title', (I, pageObject) => {})", () => {
     const source = `
     Feature('PageObject');
@@ -275,7 +287,22 @@ describe.skip('#transform TypeScript', () => {
     classpage.type('Class Page Type');
     classpage.purgeDomains();
   });
+
+  Scenario('@ClassPageObject', async (I: ICodeceptInjected['I'], classpage: ICodeceptInjected['classpage']) => {
+    classpage.type('Class Page Type');
+    classpage.purgeDomains();
+  });
+
+  Data(accounts).Scenario('@ClassPageObject', (I: CodeceptJS.I, classpage: CodeceptJS.classpage, current: any) => {
+    classpage.type('Class Page Type');
+    classpage.purgeDomains();
+  });
     `;
-    expect(transform({ source })).toContain('Scenario(\'@ClassPageObject\', ({ I: CodeceptJS.I, classpage: CodeceptJS.classpage })');
+    const result = transform({ source }, null, {
+      parser: require('recast/parsers/typescript'),
+    });
+    expect(result).toContain('Scenario(\'@ClassPageObject\', ({ I, classpage })');
+    expect(result).toContain('Scenario(\'@ClassPageObject\', async ({ I, classpage })');
+    expect(result).toContain('Data(accounts).Scenario(\'@ClassPageObject\', ({ I, classpage, current })');
   });
 });

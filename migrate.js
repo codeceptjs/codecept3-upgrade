@@ -1,8 +1,8 @@
 const j = require('jscodeshift');
 const replacer = require('./replacer');
 
-module.exports = (fileInfo) => {
-  const newSource = j(fileInfo.source);
+module.exports = (fileInfo, api, options) => {
+  const newSource = j(fileInfo.source, options);
   // Scenario
   replacer(newSource.find(j.ExpressionStatement, {
     expression: {
