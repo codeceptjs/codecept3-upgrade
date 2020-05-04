@@ -6,7 +6,7 @@
   "author": "Vorobeyko <sashavorobey95@gmail.com>",
   "main": "index.js",
   "bin": {
-    "codeceptjs-migrate": "./bin/codeceptjs-migrate.js"
+    "codecept3-upgrade": "./bin/codeceptjs-migrate.js"
   },
   "files": [
     "bin/codeceptjs-migrate.js",
