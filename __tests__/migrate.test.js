@@ -1,6 +1,18 @@
 const transform = require('../migrate');
 
 describe('#transform JavaScript', () => {
+  it("Scenario('title', I => {})", () => {
+    const source = `
+    Feature('PageObject');
+  
+  Scenario('@ClassPageObject', (I) => {
+    classpage.type('Class Page Type');
+    classpage.purgeDomains();
+  });
+    `;
+    expect(transform({ source })).toContain('Scenario(\'@ClassPageObject\', ({ I })');
+  });
+
   it("Scenario('title', (I) => {})", () => {
     const source = `
     Feature('PageObject');
@@ -79,6 +91,7 @@ describe('#transform JavaScript', () => {
     `;
     expect(transform({ source })).toContain('Scenario(\'@ClassPageObject\', async ({ I, classpage })');
   });
+
   it('Scenario("title", async () => {})', () => {
     const source = `
     Feature('PageObject');
@@ -90,6 +103,7 @@ describe('#transform JavaScript', () => {
     `;
     expect(transform({ source })).toContain('Scenario(\'@ClassPageObject\', async ()');
   });
+
   it('Scenario("title", () => {})', () => {
     const source = `
     Feature('PageObject');
@@ -102,7 +116,47 @@ describe('#transform JavaScript', () => {
     expect(transform({ source })).toContain('Scenario(\'@ClassPageObject\', ()');
   });
 
-  it('Scenario.skip("title", (I, classpage) => {})', () => {
+  it('Before((I, classpage) => {})', () => {
+    const source = `Before((I, classpage) => {
+      classpage.type('Class Page Type');
+      classpage.purgeDomains();
+    })`;
+    expect(transform({ source })).toContain('Before(({ I, classpage })');
+  });
+
+  it('After((I, classpage) => {})', () => {
+    const source = `After((I, classpage) => {
+      classpage.type('Class Page Type');
+      classpage.purgeDomains();
+    })`;
+    expect(transform({ source })).toContain('After(({ I, classpage })');
+  });
+
+  it('BeforeSuite((I, classpage) => {})', () => {
+    const source = `BeforeSuite((I, classpage) => {
+      classpage.type('Class Page Type');
+      classpage.purgeDomains();
+    })`;
+    expect(transform({ source })).toContain('BeforeSuite(({ I, classpage })');
+  });
+
+  it('AfterSuite((I, classpage) => {})', () => {
+    const source = `AfterSuite((I, classpage) => {
+      classpage.type('Class Page Type');
+      classpage.purgeDomains();
+    })`;
+    expect(transform({ source })).toContain('AfterSuite(({ I, classpage })');
+  });
+
+  it('Scenario(\'@ClassPageObject\', () => {}).tag(\'\')', () => {
+    const source = `Scenario('@ClassPageObject', (I, classpage) => {
+      classpage.type('Class Page Type');
+      classpage.purgeDomains();
+    }).tag('normal').tag('important').tag('@slow');`;
+    expect(transform({ source })).toContain('Scenario(\'@ClassPageObject\', ({ I, classpage })');
+  });
+
+  it('Scenario.skip(\'@ClassPageObject\', (I, classpage) => {})', () => {
     const source = `
     Feature('PageObject');
   

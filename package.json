@@ -1,6 +1,6 @@
 {
   "name": "codecept3-upgrade",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "repository": "https://github.com/codecept-js/codecept3-upgrade.git",
   "license": "MIT",
   "author": "Vorobeyko <sashavorobey95@gmail.com>",

@@ -2,69 +2,81 @@ const j = require('jscodeshift');
 const replacer = require('./replacer');
 
 module.exports = (fileInfo, api, options) => {
-  const newSource = j(fileInfo.source, options);
+  const newSource = j(fileInfo.source, process.env.NODE_ENV === 'test' ? options : {});
+  // Before
+  replacer(newSource.find(j.CallExpression, {
+    callee: {
+      name: 'Before',
+    },
+  }));
+  // After
+  replacer(newSource.find(j.CallExpression, {
+    callee: {
+      name: 'After',
+    },
+  }));
+  // BeforeSuite
+  replacer(newSource.find(j.CallExpression, {
+    callee: {
+      name: 'BeforeSuite',
+    },
+  }));
+  // AfterSuite
+  replacer(newSource.find(j.CallExpression, {
+    callee: {
+      name: 'AfterSuite',
+    },
+  }));
   // Scenario
-  replacer(newSource.find(j.ExpressionStatement, {
-    expression: {
-      callee: {
+  replacer(newSource.find(j.CallExpression, {
+    callee: {
+      name: 'Scenario',
+    },
+  }));
+  // xScenario
+  replacer(newSource.find(j.CallExpression, {
+    callee: {
+      name: 'xScenario',
+    },
+  }));
+  // Data().Scenario
+  replacer(newSource.find(j.CallExpression, {
+    callee: {
+      property: {
         name: 'Scenario',
       },
     },
   }));
-  // xScenario
-  replacer(newSource.find(j.ExpressionStatement, {
-    expression: {
-      callee: {
-        name: 'xScenario',
-      },
-    },
-  }));
-  // Data().Scenario
-  replacer(newSource.find(j.ExpressionStatement, {
-    expression: {
-      callee: {
-        property: {
-          name: 'Scenario',
-        },
-      },
-    },
-  }));
   // Scenario.only
-  replacer(newSource.find(j.ExpressionStatement, {
-    expression: {
-      callee: {
-        object: {
-          name: 'Scenario',
-        },
-        property: {
-          name: 'only',
-        },
+  replacer(newSource.find(j.CallExpression, {
+    callee: {
+      object: {
+        name: 'Scenario',
+      },
+      property: {
+        name: 'only',
       },
     },
   }));
   // Scenario.skip
-  replacer(newSource.find(j.ExpressionStatement, {
-    expression: {
-      callee: {
-        object: {
-          name: 'Scenario',
-        },
-        property: {
-          name: 'skip',
-        },
+  replacer(newSource.find(j.CallExpression, {
+    callee: {
+      object: {
+        name: 'Scenario',
+      },
+      property: {
+        name: 'skip',
       },
     },
   }));
   // Scenario.todo
-  replacer(newSource.find(j.ExpressionStatement, {
-    expression: {
-      callee: {
-        object: {
-          name: 'Scenario',
-        },
-        property: {
-          name: 'todo',
-        },
+  replacer(newSource.find(j.CallExpression, {
+    callee: {
+      object: {
+        name: 'Scenario',
+      },
+      property: {
+        name: 'todo',
       },
     },
   }));
