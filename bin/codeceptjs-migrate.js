@@ -17,7 +17,7 @@ function run(paths, options) {
 
 yargs
   .command(
-    'migrate [path]',
+    '$0 [path]',
     'migrate all Scenario from v.2 to v.3',
     (yargs) => {
       yargs.positional('path', {
