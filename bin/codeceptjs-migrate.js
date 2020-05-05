@@ -44,9 +44,6 @@ yargs
         stdin: false,
       };
 
-      if (fs.lstatSync(filePattern).isDirectory()) {
-        filePattern = path.join(filePattern, '*_test.js');
-      }
       const options = { ...defaultOptions, ...argv };
 
       run([filePattern], options);
