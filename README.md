@@ -18,13 +18,13 @@ Scenario('title', ({ I, loginPage }) => {});
 
 Migration is done via "codecept3-upgrade" npx script which can be executed without an installation.
 
-* Upgrade all tests (**_test.js) in current directory: 
+* Upgrade all tests (*test.js) in current directory: 
 
 ```
 npx codecept3-upgrade 
 ```
 
-* Upgrade all tests (**_test.js) in a path: 
+* Upgrade all tests (*test.js) in a path: 
 
 ```
 npx codecept3-upgrade tests/
