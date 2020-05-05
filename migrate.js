@@ -2,6 +2,9 @@ const j = require('jscodeshift');
 const replacer = require('./replacer');
 
 module.exports = (fileInfo, api, options) => {
+  if (!fileInfo.path.match(/_test\.js$/) && !options.all) {
+    return; // not a test, skipping
+  }
   const newSource = j(fileInfo.source, process.env.NODE_ENV === 'test' ? options : {});
   // Before
   replacer(newSource.find(j.CallExpression, {
