@@ -3,6 +3,7 @@
 const yargs = require('yargs');
 const Runner = require('jscodeshift/src/Runner.js');
 const path = require('path');
+const fs = require('fs');
 const args = require('./args');
 
 process.env.PATH = `${process.env.PATH}:${__dirname}`;
@@ -18,23 +19,24 @@ function run(paths, options) {
 yargs
   .command(
     '$0 [path]',
-    'migrate all Scenario from v.2 to v.3',
+    'migrate all CodeceptJS tests from v.2 to v.3',
     (yargs) => {
       yargs.positional('path', {
-        describe: 'migrate ts or js files',
+        describe: 'path to a project',
         type: 'string',
       });
+      yargs.boolean('--all');
     },
     (argv) => {
-      const positionalArguments = process.argv.slice(3);
-      const defualtOptions = {
+      let filePattern = argv.path || '.';
+      const defaultOptions = {
         transform: path.join(__dirname, '../migrate.js'),
         verbose: 0,
         dry: false,
         print: false,
         babel: true,
         extensions: 'js',
-        ignorePattern: [],
+        ignorePattern: ['node_modules'],
         ignoreConfig: [],
         runInBand: false,
         silent: false,
@@ -42,8 +44,9 @@ yargs
         stdin: false,
       };
 
-      const options = { ...defualtOptions, ...argv };
-      run(positionalArguments, options);
+      const options = { ...defaultOptions, ...argv };
+
+      run([filePattern], options);
     },
   )
   .options({ ...args.options })
