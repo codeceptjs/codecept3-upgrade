@@ -1,6 +1,25 @@
 const transform = require('../migrate');
 
 describe('#transform JavaScript', () => {
+  it('ArrowFunction in body', () => {
+    const source = `
+    BeforeSuite(async ({ I }) => {
+      const listUrls = await I.getAppUrls()
+      const parametersUrls = listUrls.filter((url) => url.indexOf(':') !== -1)
+      parameterUrl = parametersUrls[0]
+    })
+
+    Scenario('@ClassPageObject', (I) => {
+      classpage.type('Class Page Type');
+      const parametersUrls_2 = listUrls.filter((url) => url.indexOf(':') !== -1)
+      classpage.purgeDomains();
+    });
+    `;
+    expect(transform({ source })).toContain('Scenario(\'@ClassPageObject\', ({ I })');
+    expect(transform({ source })).toContain('const parametersUrls = listUrls.filter((url) => url.indexOf(\':\') !== -1)');
+    expect(transform({ source })).toContain('const parametersUrls_2 = listUrls.filter((url) => url.indexOf(\':\') !== -1)');
+  });
+
   it("Scenario('title', I => {})", () => {
     const source = `
     Feature('PageObject');

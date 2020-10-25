@@ -10,7 +10,7 @@ module.exports = (source) => {
     .filter(p => {
       const root = p.value;
       for (const param of root.params) {
-        return param.type !== 'ObjectPattern';
+        return param.type !== 'ObjectPattern' && root.body.type === 'BlockStatement' && !root.body.left;
       }
     })
     .replaceWith(p => {
